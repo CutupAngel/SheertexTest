@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+You can add your personal github token to request over 500 in one hour.
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import { GITHUB_ACCESS_TOKEN, GITHUB_API } from "../config";
 import { IUserInfo } from "../types";
 
@@ -10,16 +9,22 @@ export async function getGitUser(userId: string) {
         let userInfor = [];
         let index = 1;
         let userWholeInfo: IUserInfo[] = [];
+        let response;
         do {
-            const response = await fetch(getFollowersEndpoint(userId, 100, index++), {
-                method: "GET",
-                headers: {
-                    Authorization: "Bearer " + GITHUB_ACCESS_TOKEN,
-                },
-            });
+            if (!GITHUB_ACCESS_TOKEN) {
+                response = await fetch(getFollowersEndpoint(userId, 100, index++));
+            } else {
+                response = await fetch(getFollowersEndpoint(userId, 100, index++), {
+                    method: "GET",
+                    headers: {
+                        Authorization: GITHUB_ACCESS_TOKEN,
+                    },
+                });
+            }
+
             userInfor = await response.json();
             userWholeInfo = [...userWholeInfo, ...userInfor];
-        } while (userInfor.length !== 0);
+        } while (response.status === 200 && userInfor.length !== 0);
         return userWholeInfo;
     } catch (error) {
         console.log("error", error);

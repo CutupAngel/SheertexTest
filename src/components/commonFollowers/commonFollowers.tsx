@@ -6,7 +6,6 @@ import { IUserInfo } from "../../types";
 import UserAvatar from "../userAvatar/userAvatar";
 
 function CommonFollowers() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [firstId, setFirstId] = useState<string>("");
     const [secondId, setSecondId] = useState<string>("");
     const [firstUserInfo, setFirstUserInfo] = useState<IUserInfo[] | undefined>([]);
@@ -14,14 +13,13 @@ function CommonFollowers() {
     const [commonInfo, setCommonInfo] = useState<IUserInfo[] | undefined>([]);
 
     const handleClick = () => {
-        setIsLoading(true);
         getGitUser(firstId).then((res) => setFirstUserInfo(res));
         getGitUser(secondId).then((res) => setSecondUserInfo(res));
-        setIsLoading(false);
     };
 
     useEffect(() => {
         if (firstUserInfo?.length === 0 || secondUserInfo?.length === 0) {
+            setCommonInfo([]);
             return;
         }
         setCommonInfo(secondUserInfo?.filter((item) => firstUserInfo?.find((fItem) => fItem.login === item.login)));
@@ -55,20 +53,17 @@ function CommonFollowers() {
                 </Box>
             </Box>
             <Grid container spacing={2} sx={{ justifyContent: "center" }}>
-                {!isLoading && commonInfo && commonInfo.length > 0 ? (
+                {!commonInfo || commonInfo.length === 0 ? (
+                    <Typography>No Common Followers</Typography>
+                ) : (
+                    commonInfo &&
+                    commonInfo.length > 0 &&
                     commonInfo.map((item, index) => (
                         <Grid item key={index}>
-                            <UserAvatar
-                                userInfo={item}
-                                handleClick={() => {
-                                    console.log("click");
-                                }}
-                            />
+                            <UserAvatar userInfo={item} handleClick={() => {}} />
                         </Grid>
                     ))
-                ) : (
-                    <Typography>Loading....</Typography>
-                )}
+                )}{" "}
             </Grid>
         </Box>
     );

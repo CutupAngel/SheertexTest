@@ -3,7 +3,7 @@ import React from "react";
 import { IUserAvatarProps } from "./userAvatar.type";
 
 function UserAvatar(props: IUserAvatarProps) {
-    const { userInfo, handleClick } = props;
+    const { userInfo } = props;
     return (
         <Card sx={{ textAlign: "center", borderWidth: "0px", boxShadow: "none" }}>
             <Link href={userInfo.html_url}>
